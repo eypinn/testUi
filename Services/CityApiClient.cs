@@ -9,3 +9,5 @@ public sealed class CityApiClient(HttpClient httpClient)
         await httpClient.GetFromJsonAsync<List<City>>("api/cities", ct) ?? [];
 }
 
+
+
