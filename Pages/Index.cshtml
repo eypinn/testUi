@@ -1,0 +1,42 @@
+@page
+@model IndexModel
+@using System.Globalization
+@{
+    Layout = null;
+    var tr = CultureInfo.GetCultureInfo("tr-TR");
+}
+<!doctype html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Türkiye Şehirleri</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <main class="container">
+        <header><div class="eyebrow">CityViewerWeb → CityProviderApi</div><h1>Türkiye Şehirleri</h1>
+            <p>Şehir bilgileri ayrı bir .NET 10 API uygulamasından alınır. Türkiye dışındaki şehirler API servisinde filtrelenir.</p>
+        </header>
+        @if (Model.Error is not null)
+        {
+            <div class="error">@Model.Error</div>
+        }
+        else
+        {
+            <div class="summary">@Model.Cities.Count şehir listeleniyor <a href="/">Yenile ↗</a></div>
+            <div class="table-wrap"><table>
+                <thead><tr><th>Şehir</th><th>Nüfus</th><th>Yüzölçümü (km²)</th><th>Ülke</th></tr></thead>
+                <tbody>
+                @foreach (var city in Model.Cities)
+                {
+                    <tr><td><strong>@city.Name</strong></td><td>@city.Population.ToString("N0", tr)</td>
+                        <td>@city.AreaKm2.ToString("N2", tr)</td><td>@city.CountryCode</td></tr>
+                }
+                </tbody>
+            </table></div>
+            <p class="footnote">Nüfus ve yüzölçümü değerleri demo amaçlı yaklaşık değerlerdir.</p>
+        }
+    </main>
+</body>
+</html>
