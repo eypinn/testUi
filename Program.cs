@@ -1,7 +1,7 @@
 using CityViewerWeb.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddRazorPages();
+builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<CityApiClient>(client =>
 {
     var baseUrl = builder.Configuration["CityApi:BaseUrl"]
@@ -12,5 +12,7 @@ builder.Services.AddHttpClient<CityApiClient>(client =>
 
 var app = builder.Build();
 app.UseStaticFiles();
-app.MapRazorPages();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 app.Run();

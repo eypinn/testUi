@@ -1,5 +1,4 @@
-@page
-@model IndexModel
+@model CityViewerWeb.Models.CityListViewModel
 @using System.Globalization
 @{
     Layout = null;
@@ -15,7 +14,9 @@
 </head>
 <body>
     <main class="container">
-        <header><div class="eyebrow">CityViewerWeb → CityProviderApi</div><h1>Türkiye Şehirleri</h1>
+        <header>
+            <div class="eyebrow">CityViewerWeb → CityProviderApi</div>
+            <h1>Türkiye Şehirleri</h1>
             <p>Şehir bilgileri ayrı bir .NET 10 API uygulamasından alınır. Türkiye dışındaki şehirler API servisinde filtrelenir.</p>
         </header>
         @if (Model.Error is not null)
