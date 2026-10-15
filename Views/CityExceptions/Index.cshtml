@@ -1,0 +1,76 @@
+@model CityViewerWeb.Models.CityExceptionsViewModel
+@using System.Globalization
+@{
+    Layout = null;
+    var tr = CultureInfo.GetCultureInfo("tr-TR");
+}
+<!doctype html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Şehir İstisna Yönetimi</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+<main class="container">
+    <header>
+        <div class="eyebrow">CityViewerWeb → CityProviderApi → dbo.CitiesIstisna</div>
+        <h1>Şehir İstisna Yönetimi</h1>
+        <p>Şehirlerin ana kaydını değiştirmeden istisna değerlerini yönet. Kaydettiğin kayıtlar şehirler ekranında öncelikli görünür.</p>
+        <nav class="nav-links"><a href="/">← Şehirler ekranı</a><a href="/exceptions">Yeni istisna</a></nav>
+    </header>
+    @if (Model.Error is not null) { <div class="error">@Model.Error</div> }
+    @if (Model.Success is not null) { <div class="success">@Model.Success</div> }
+    <section class="editor">
+        <h2>İstisna ekle / güncelle</h2>
+        <p class="footnote">Şehir ID, dbo.Cities tablosunda bulunan bir şehre ait olmalıdır. İstisna alanları bir bütün olarak görüntülenir.</p>
+        <form method="post" action="/exceptions/save">
+            @Html.AntiForgeryToken()
+            <div class="form-grid">
+                <label>Şehir ID <input name="CityId" value="@Model.Edit.CityId" type="number" min="1" required /></label>
+                <label>Şehir adı <input name="Name" value="@Model.Edit.Name" maxlength="150" required /></label>
+                <label>Ülke kodu <input name="CountryCode" value="@Model.Edit.CountryCode" maxlength="10" required /></label>
+                <label>Nüfus <input name="Population" value="@Model.Edit.Population" type="number" min="0" /></label>
+                <label>Yüzölçümü (km²) <input name="AreaKm2" value="@Model.Edit.AreaKm2" type="number" min="0" step="any" /></label>
+                <label class="full">İstisna nedeni <input name="Reason" value="@Model.Edit.Reason" maxlength="250" /></label>
+            </div>
+            <button type="submit">İstisnayı kaydet</button>
+        </form>
+    </section>
+    <section>
+        <h2>Mevcut istisnalar</h2>
+        <div class="table-wrap"><table>
+            <thead><tr><th>ID</th><th>Şehir</th><th>Nüfus</th><th>Yüzölçümü</th><th>Neden</th><th>İşlemler</th></tr></thead>
+            <tbody>
+            @foreach (var item in Model.Exceptions)
+            {
+                <tr>
+                    <td>@item.CityId</td><td>@item.Name</td>
+                    <td>@item.Population?.ToString("N0", tr)</td><td>@item.AreaKm2?.ToString("N2", tr)</td>
+                    <td>@item.Reason</td>
+                    <td class="actions">
+                        <a href="/exceptions?cityId=@item.CityId">Düzenle</a>
+                        <form method="post" action="/exceptions/delete">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="cityId" value="@item.CityId" />
+                            <button class="danger" type="submit">Sil</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table></div>
+    </section>
+    <section><h2>Şehir seçimi için referans</h2>
+        <p class="footnote">Aşağıdaki liste dbo.CitiesVw üzerinden okunur. İstisna kaydı bulunan şehirlerin görünen değerleri burada da istisnadan gelebilir.</p>
+        <div class="city-pills">
+            @foreach (var city in Model.Cities)
+            {
+                <a href="/exceptions?cityId=@city.Id">@city.Name (#@city.Id)</a>
+            }
+        </div>
+    </section>
+</main>
+</body>
+</html>

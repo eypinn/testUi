@@ -17,6 +17,7 @@
         <header>
             <div class="eyebrow">CityViewerWeb → CityProviderApi</div>
             <h1>Türkiye Şehirleri</h1>
+            <nav class="nav-links"><a href="/exceptions">İstisna yönetimi →</a></nav>
             <p>Şehir bilgileri ayrı bir .NET 10 API uygulamasından alınır. Türkiye dışındaki şehirler API servisinde filtrelenir.</p>
         </header>
         @if (Model.Error is not null)
@@ -31,8 +32,8 @@
                 <tbody>
                 @foreach (var city in Model.Cities)
                 {
-                    <tr><td><strong>@city.Name</strong></td><td>@city.Population.ToString("N0", tr)</td>
-                        <td>@city.AreaKm2.ToString("N2", tr)</td><td>@city.CountryCode</td></tr>
+                    <tr><td><strong>@city.Name</strong></td><td>@(city.Population?.ToString("N0", tr) ?? "—")</td>
+                        <td>@(city.AreaKm2?.ToString("N2", tr) ?? "—")</td><td>@city.CountryCode</td></tr>
                 }
                 </tbody>
             </table></div>
